@@ -1,6 +1,6 @@
 <?php
 
-namespace Forecast\Map\Sandbox\MainPage\Presentation\Http\Site\Controllers;
+namespace Untek\Sandbox\Module\Presentation\Http\Site\Controllers;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
