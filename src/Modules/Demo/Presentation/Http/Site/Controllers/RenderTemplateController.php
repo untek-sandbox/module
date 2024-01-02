@@ -1,6 +1,6 @@
 <?php
 
-namespace Untek\Sandbox\Module\Modules\Example\Presentation\Http\Site\Controllers;
+namespace Untek\Sandbox\Module\Modules\Demo\Presentation\Http\Site\Controllers;
 
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
 use Symfony\Component\HttpFoundation\Request;

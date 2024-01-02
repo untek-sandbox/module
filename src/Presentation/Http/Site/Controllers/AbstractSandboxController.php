@@ -274,7 +274,7 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
                         $tabContent .= $tabContentItem;
                     }
                     $items[] = [
-                        'name' => $tabName,
+                        'title' => $tabName,
                         'content' => $tabContent,
                     ];
                 }
