@@ -268,12 +268,6 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
 
     protected function renderFile(string $file, array $params = []): Response
     {
-//        $content = $this->generateContent();
-//        $params['content'] = $content;
-//        return $this->render($file, $params);
-//        $content = $this->generateContent();
-//        $params['dumps'] = $this->dumps;
-//        $params['content'] = $content . ($params['content'] ?? '');
         return $this->render($file, $params);
     }
 
