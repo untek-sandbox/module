@@ -58,6 +58,15 @@ abstract class AbstractSandboxController
         return false;
     }
 
+    public static function menu(): array {
+        return [];
+    }
+
+    public function __invoke(Request $request): Response
+    {
+        return $this->renderControllerList($this->menu());
+    }
+    
     protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
     {
         return $this->redirect($this->generateUrl($route, $parameters), $status);
@@ -363,7 +372,7 @@ abstract class AbstractSandboxController
         return $response;
     }
 
-    protected function renderList(array $controllers): Response {
+    protected function renderControllerList(array $controllers): Response {
         return $this->renderDefault([
             'content' => $this->generateList($controllers),
         ]);
