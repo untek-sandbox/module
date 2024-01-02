@@ -19,6 +19,7 @@ use Untek\Core\Instance\Helpers\PropertyHelper;
 //use Untek\Lib\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
 use Untek\Core\Text\Helpers\Inflector;
 use Untek\Lib\Web\View\Libs\View;
+use Untek\Sandbox\Module\Application\Services\ControllerFinder;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
 use ZnCore\Base\Enums\Http\HttpStatusCodeEnum;
 use ZnCore\Base\Legacy\Yii\Helpers\ArrayHelper;
@@ -26,11 +27,9 @@ use ZnCore\Domain\Helpers\EntityHelper;
 //use ZnLib\Web\Widgets\TabContent\TabContentWidget;
 use ZnLib\Web\Widgets\Table\TableWidget;
 
-abstract class AbstractSandboxController //extends AbstractRestApiController
+abstract class AbstractSandboxController
 {
 
-//    protected $layout = __DIR__ . '/../views/layouts/main.php';
-    protected $viewsDir = __DIR__ . '/../views/common';
     protected $contentArray = [];
     protected $tabs = [];
     protected $dumps = [];
@@ -52,10 +51,11 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
     public static function title(): ?string
     {
         return null;
-//        $controllerName = FilePathHelper::fileNameOnly(static::class);
-//        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
-//        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
-//        return Inflector::titleize($controllerPureName);
+    }
+
+    public static function isHidden(): bool
+    {
+        return false;
     }
 
     protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
@@ -361,5 +361,36 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
+    }
+
+    protected function renderList(array $controllers): Response {
+        return $this->renderDefault([
+            'content' => $this->generateList($controllers),
+        ]);
+    }
+
+    protected function generateList(array $controllers): string
+    {
+        $namespaces = explode(',', getenv('SANDBOX_NAMESPACES'));
+        $modules = (new ControllerFinder())->findAll($namespaces);
+
+        $controllersMap = [];
+        foreach ($modules as $module) {
+            foreach ($module['controllers'] as $controller) {
+                $controllersMap[$controller['className']] = $controller['uri'];
+            }
+        }
+//        dd($controllersMap);
+        
+        $html = '<ul>';
+        foreach ($controllers as $controllerClassName) {
+            $title = MainPageHelper::title($controllerClassName);
+//            dd($controllersMap, $controllerClassName);
+            $uri = $controllersMap[$controllerClassName];
+
+            $html .= "<li><a href='{$uri}'>{$title}</a></li>";
+        }
+        $html .= '</ul>';
+        return $html;
     }
 }
