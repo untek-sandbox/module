@@ -7,19 +7,7 @@ use Untek\Core\Instance\Helpers\InstanceHelper;
 
 return function (RoutingConfigurator $routes) {
 
-    $modules = (new ControllerFinder())->find('Forecast\\Map\\Sandbox');
-    foreach ($modules as $module) {
-        if (!empty($module['controllers'])) {
-            foreach ($module['controllers'] as $controller) {
-                $controllerInstance = InstanceHelper::create($controller['className']);
-                $path = $controller['uri'];
-                $routes
-                    ->add(hash('crc32b', $path), $path)
-                    ->controller($controllerInstance)
-                    ->methods(['GET', 'POST']);
-            }
-        }
-    }
+    (new \Untek\Sandbox\Module\Application\Services\RouteGenerator())->generate(['Forecast\\Map\\Sandbox'], $routes);
 
     $controller = new MainPageController();
 
