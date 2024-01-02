@@ -7,8 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Untek\Component\Office\Domain\Libs\DocXRender;
 
-class OfficeController extends AbstractSandboxController
+class DocumentRenderController extends AbstractSandboxController
 {
+
+    public static function title(): ?string
+    {
+        return 'Шаблонизация Word-документа';
+    }
 
     public function __invoke(Request $request): Response
     {
