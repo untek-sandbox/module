@@ -8,6 +8,7 @@ use Untek\Core\Code\Helpers\ComposerHelper;
 use Untek\Core\FileSystem\Helpers\FilePathHelper;
 use Untek\Core\FileSystem\Helpers\FindFileHelper;
 use Untek\Core\Text\Helpers\Inflector;
+use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
 
 class ControllerFinder
 {
@@ -46,10 +47,10 @@ class ControllerFinder
             $controllerName = FilePathHelper::fileRemoveExt($controllerFileName);
             $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
             $controllerClassName = $namespace . '\\Presentation\\Http\\Site\\Controllers\\' . $controllerName;
-//            $title = $controllerClassName::title() ?: Inflector::titleize($controllerPureName);
+            $title = $controllerClassName::title() ?: MainPageHelper::title($controllerFileName);
             $controller = [
                 'namespace' => $namespace,
-                'title' => $controllerClassName::title(),
+                'title' => $title,
                 'pureName' => $controllerPureName,
                 'fileName' => $controllerFileName,
                 'name' => $controllerName,

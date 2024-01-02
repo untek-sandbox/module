@@ -19,6 +19,7 @@ use Untek\Core\Instance\Helpers\PropertyHelper;
 //use Untek\Lib\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
 use Untek\Core\Text\Helpers\Inflector;
 use Untek\Lib\Web\View\Libs\View;
+use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
 use ZnCore\Base\Enums\Http\HttpStatusCodeEnum;
 use ZnCore\Base\Legacy\Yii\Helpers\ArrayHelper;
 use ZnCore\Domain\Helpers\EntityHelper;
@@ -42,18 +43,19 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
     public function __construct()
     {
         $this->formManager = ContainerHelper::getContainer()->get(FormManager::class);
-        $session = ContainerHelper::getContainer()->get(SessionInterface::class);
         $this->htmlRender = ContainerHelper::getContainer()->get(HtmlRenderInterface::class);
+        $session = ContainerHelper::getContainer()->get(SessionInterface::class);
         $session->start();
         $this->session = $session;
     }
 
     public static function title(): ?string
     {
-        $controllerName = FilePathHelper::fileNameOnly(static::class);
-        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
-        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
-        return Inflector::titleize($controllerPureName);
+        return null;
+//        $controllerName = FilePathHelper::fileNameOnly(static::class);
+//        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
+//        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
+//        return Inflector::titleize($controllerPureName);
     }
 
     protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
@@ -325,12 +327,15 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
     protected function render(string $viewFile, array $params = []): Response
     {
         $content = $this->generateContent();
+
+        $title = static::title() ?: MainPageHelper::title(static::class);
+        if($title && isset($this->htmlRender)) {
+            $this->htmlRender->setParam('title', $title);
+        }
+
         $params['dumps'] = $this->dumps;
         $params['content'] = $content . ($params['content'] ?? '');
-
-        if(static::title()) {
-            $this->htmlRender->setParam('title', static::title());
-        }
+        $params['title'] = $title;
 
         $view = new View();
         $content = $view->renderFile($viewFile, $params);
