@@ -13,7 +13,7 @@ class OfficeController extends AbstractSandboxController
     public function __invoke(Request $request): Response
     {
         $templateFile = __DIR__ . '/../../../../resources/doc-x/templates/template.docx';
-        $targetDirectory = __DIR__ . '/../../../../../../../var/docX';
+        $targetDirectory = getenv('VAR_DIRECTORY') . '/docX';
         $resultFile = $targetDirectory . '/result_' . date('Y.m.d_H.i.s') . '.docx';
 
         $replacementList = [
