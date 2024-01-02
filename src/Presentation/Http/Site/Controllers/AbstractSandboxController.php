@@ -10,11 +10,14 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Untek\Bundle\Notify\Domain\Interfaces\Services\ToastrServiceInterface;
 use Untek\Component\Encoder\Encoders\XmlEncoder;
 use Untek\Component\Web\Form\Libs\FormManager;
+use Untek\Component\Web\HtmlRender\Application\Services\HtmlRenderInterface;
 use Untek\Component\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
 use Untek\Core\Container\Helpers\ContainerHelper;
+use Untek\Core\FileSystem\Helpers\FilePathHelper;
 use Untek\Core\FileSystem\Helpers\MimeTypeHelper;
 use Untek\Core\Instance\Helpers\PropertyHelper;
 //use Untek\Lib\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
+use Untek\Core\Text\Helpers\Inflector;
 use Untek\Lib\Web\View\Libs\View;
 use ZnCore\Base\Enums\Http\HttpStatusCodeEnum;
 use ZnCore\Base\Legacy\Yii\Helpers\ArrayHelper;
@@ -34,13 +37,23 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
 
     protected FormManager $formManager;
     protected SessionInterface $session;
+    protected HtmlRenderInterface $htmlRender;
 
     public function __construct()
     {
         $this->formManager = ContainerHelper::getContainer()->get(FormManager::class);
         $session = ContainerHelper::getContainer()->get(SessionInterface::class);
+        $this->htmlRender = ContainerHelper::getContainer()->get(HtmlRenderInterface::class);
         $session->start();
         $this->session = $session;
+    }
+
+    public static function title(): ?string
+    {
+        $controllerName = FilePathHelper::fileNameOnly(static::class);
+        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
+        $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
+        return Inflector::titleize($controllerPureName);
     }
 
     protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
@@ -314,6 +327,10 @@ abstract class AbstractSandboxController //extends AbstractRestApiController
         $content = $this->generateContent();
         $params['dumps'] = $this->dumps;
         $params['content'] = $content . ($params['content'] ?? '');
+
+        if(static::title()) {
+            $this->htmlRender->setParam('title', static::title());
+        }
 
         $view = new View();
         $content = $view->renderFile($viewFile, $params);

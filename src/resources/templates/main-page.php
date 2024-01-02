@@ -13,7 +13,7 @@
 <ul>
     <?php foreach ($modules as $module): ?>
         <li>
-            <?= $module['pureName'] ?>
+            <?= $module['pureName'] ?>&nbsp;<small class="text-muted">(<?= $module['namespace'] ?>)</small>
         </li>
         <?php if (!empty($module['controllers'])): ?>
             <ul>
