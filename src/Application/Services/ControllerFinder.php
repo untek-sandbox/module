@@ -9,6 +9,7 @@ use Untek\Core\FileSystem\Helpers\FilePathHelper;
 use Untek\Core\FileSystem\Helpers\FindFileHelper;
 use Untek\Core\Text\Helpers\Inflector;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
+use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxMenuController;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
 
 class ControllerFinder
@@ -23,7 +24,7 @@ class ControllerFinder
         }
         return $modules;
     }
-    
+
     private function find(string $namespace, bool $showHidden = true): array
     {
         $directory = ComposerHelper::getPsr4Path($namespace);
@@ -51,10 +52,14 @@ class ControllerFinder
             $controllerClassName = $namespace . '\\Presentation\\Http\\Site\\Controllers\\' . $controllerName;
 
             $controllerIsHidden = $controllerClassName::isHidden();
+            $isMenu = is_subclass_of($controllerClassName, AbstractSandboxMenuController::class);
+            $menuItems = $isMenu ? $controllerClassName::menu() : [];
 
-            if($showHidden || !$controllerIsHidden) {
+            if ($showHidden || !$controllerIsHidden) {
                 $title = $controllerClassName::title() ?: MainPageHelper::title($controllerFileName);
                 $controller = [
+                    'isMenu' => $isMenu,
+                    'menuItems' => $menuItems,
                     'namespace' => $namespace,
                     'title' => $title,
                     'pureName' => $controllerPureName,
@@ -64,7 +69,7 @@ class ControllerFinder
                     'className' => $controllerClassName,
                 ];
                 $rr = new ReflectionClass($controller['className']);
-                if(!$rr->isAbstract()) {
+                if (!$rr->isAbstract()) {
                     $module['controllers'][] = $controller;
                 }
             }

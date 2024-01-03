@@ -22,6 +22,9 @@
                         <a href="<?= $controller['uri'] ?>">
                             <?= $controller['title'] ?>
                         </a>
+                        <?php if ($controller['isMenu']): ?>
+                            <small class="text-muted">(<?= count($controller['menuItems']) ?>)</small>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>

@@ -6,12 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Untek\Sandbox\Module\Application\Services\ControllerFinder;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
-use ZnCore\Base\Enums\Http\HttpStatusCodeEnum;
-use ZnCore\Base\Legacy\Yii\Helpers\ArrayHelper;
-use ZnCore\Domain\Helpers\EntityHelper;
-use ZnLib\Web\Widgets\Table\TableWidget;
 
-abstract class AbstractSandboxMenuController extends AbstractSandboxController
+abstract class AbstractSandboxMenuController extends AbstractController
 {
 
     public static function menu(): array
@@ -26,9 +22,8 @@ abstract class AbstractSandboxMenuController extends AbstractSandboxController
 
     protected function renderControllerList(array $controllerClasses): Response
     {
-        return $this->renderDefault([
-            'content' => $this->generateList($controllerClasses),
-        ]);
+        $content = $this->generateList($controllerClasses);
+        return new Response($content);
     }
 
     protected function getControllerList(): array

@@ -20,7 +20,7 @@ use Untek\Core\Instance\Helpers\PropertyHelper;
 use Untek\Lib\Web\View\Libs\View;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
 
-abstract class AbstractSandboxController
+abstract class AbstractSandboxController extends AbstractController
 {
 
     protected $contentArray = [];
@@ -39,16 +39,6 @@ abstract class AbstractSandboxController
         $session = ContainerHelper::getContainer()->get(SessionInterface::class);
         $session->start();
         $this->session = $session;
-    }
-
-    public static function title(): ?string
-    {
-        return null;
-    }
-
-    public static function isHidden(): bool
-    {
-        return false;
     }
 
     protected function redirectToHome(int $status = 302): RedirectResponse
