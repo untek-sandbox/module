@@ -9,23 +9,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Untek\Bundle\Notify\Domain\Interfaces\Services\ToastrServiceInterface;
 use Untek\Component\Encoder\Encoders\XmlEncoder;
+use Untek\Component\Http\Enums\HttpStatusCodeEnum;
 use Untek\Component\Web\Form\Libs\FormManager;
 use Untek\Component\Web\HtmlRender\Application\Services\HtmlRenderInterface;
 use Untek\Component\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
+use Untek\Core\Arr\Helpers\ArrayHelper;
 use Untek\Core\Container\Helpers\ContainerHelper;
-use Untek\Core\FileSystem\Helpers\FilePathHelper;
 use Untek\Core\FileSystem\Helpers\MimeTypeHelper;
 use Untek\Core\Instance\Helpers\PropertyHelper;
-//use Untek\Lib\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
-use Untek\Core\Text\Helpers\Inflector;
 use Untek\Lib\Web\View\Libs\View;
-use Untek\Sandbox\Module\Application\Services\ControllerFinder;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
-use ZnCore\Base\Enums\Http\HttpStatusCodeEnum;
-use ZnCore\Base\Legacy\Yii\Helpers\ArrayHelper;
-use ZnCore\Domain\Helpers\EntityHelper;
-//use ZnLib\Web\Widgets\TabContent\TabContentWidget;
-use ZnLib\Web\Widgets\Table\TableWidget;
 
 abstract class AbstractSandboxController
 {
@@ -58,20 +51,6 @@ abstract class AbstractSandboxController
         return false;
     }
 
-    public static function menu(): array {
-        return [];
-    }
-
-    public function __invoke(Request $request): Response
-    {
-        return $this->renderControllerList($this->menu());
-    }
-    
-    protected function redirectToRoute(string $route, array $parameters = [], int $status = 302): RedirectResponse
-    {
-        return $this->redirect($this->generateUrl($route, $parameters), $status);
-    }
-
     protected function redirectToHome(int $status = 302): RedirectResponse
     {
         return $this->redirect('/', $status);
@@ -80,7 +59,6 @@ abstract class AbstractSandboxController
     protected function redirectToBack(Request $request, string $fallbackUrl = null): RedirectResponse
     {
         $referer = $request->headers->get('referer') ?? $fallbackUrl;
-        //$request->getSession()->setFlash('error', $exception->getMessage());
         return new RedirectResponse($referer);
     }
 
@@ -89,7 +67,8 @@ abstract class AbstractSandboxController
         return new RedirectResponse($url, $status);
     }
 
-    public function getToastr(): ToastrServiceInterface {
+    public function getToastr(): ToastrServiceInterface
+    {
         /** @var ToastrServiceInterface $toastrService */
         $toastrService = ContainerHelper::getContainer()->get(ToastrServiceInterface::class);
         return $toastrService;
@@ -103,11 +82,6 @@ abstract class AbstractSandboxController
     protected function print(string $data)
     {
         $this->contentArray[$this->tabName][] = $data;
-    }
-
-    protected function dd($data)
-    {
-        $this->dumps[] = $data;
     }
 
     protected function assertEqual($expected, $actual)
@@ -160,11 +134,6 @@ abstract class AbstractSandboxController
 </p>');
     }
 
-    protected function printForm()
-    {
-        $this->print();
-    }
-
     protected function printHeader(string $message, int $level = 3)
     {
         $message = htmlspecialchars($message);
@@ -186,17 +155,6 @@ abstract class AbstractSandboxController
             $data = $xmlEncoder->decode($data);
         }
         $this->printCode($xmlEncoder->encode($data));
-    }
-
-    protected function startBuffer()
-    {
-        ob_start();
-        ob_implicit_flush(false);
-    }
-
-    protected function endBuffer()
-    {
-        ob_get_clean();
     }
 
     protected function encodeJson($data)
@@ -224,32 +182,15 @@ abstract class AbstractSandboxController
 
     protected function dump($data)
     {
-//        $message = $this->encodeJson($data);
-//        $message = '<pre>' . $message . '</pre>';
-//        $this->alertInfo($message);
         $this->dumps[] = $data;
     }
 
     protected function printArray(array $data)
     {
-//        $this->dump($data);
-
         $message = $this->encodeJson($data);
         $message = '<pre>' . $message . '</pre>';
         $this->alertInfo($message);
     }
-
-    /*protected function error(string $message, string $type = 'danger')
-    {
-        $alertContent = $this->alertToString($message, $type);
-        $this->contentArray[$this->tabName][] = $alertContent;
-    }
-
-    protected function alert(string $message, string $type = 'success')
-    {
-        $alertContent = $this->alertToString($message, $type);
-        $this->contentArray[$this->tabName][] = $alertContent;
-    }*/
 
     protected function alertSuccess(string $message)
     {
@@ -332,7 +273,7 @@ abstract class AbstractSandboxController
         $content = $this->generateContent();
 
         $title = static::title() ?: MainPageHelper::title(static::class);
-        if($title && isset($this->htmlRender)) {
+        if ($title && isset($this->htmlRender)) {
             $this->htmlRender->setParam('title', $title);
         }
 
@@ -370,36 +311,5 @@ abstract class AbstractSandboxController
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
-    }
-
-    protected function renderControllerList(array $controllers): Response {
-        return $this->renderDefault([
-            'content' => $this->generateList($controllers),
-        ]);
-    }
-
-    protected function generateList(array $controllers): string
-    {
-        $namespaces = explode(',', getenv('SANDBOX_NAMESPACES'));
-        $modules = (new ControllerFinder())->findAll($namespaces);
-
-        $controllersMap = [];
-        foreach ($modules as $module) {
-            foreach ($module['controllers'] as $controller) {
-                $controllersMap[$controller['className']] = $controller['uri'];
-            }
-        }
-//        dd($controllersMap);
-        
-        $html = '<ul>';
-        foreach ($controllers as $controllerClassName) {
-            $title = MainPageHelper::title($controllerClassName);
-//            dd($controllersMap, $controllerClassName);
-            $uri = $controllersMap[$controllerClassName];
-
-            $html .= "<li><a href='{$uri}'>{$title}</a></li>";
-        }
-        $html .= '</ul>';
-        return $html;
     }
 }
