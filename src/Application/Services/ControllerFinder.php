@@ -28,6 +28,9 @@ class ControllerFinder
     private function find(string $namespace, bool $showHidden = true): array
     {
         $directory = ComposerHelper::getPsr4Path($namespace);
+        if (empty($directory)) {
+            throw new \RuntimeException('Namespace "' . $namespace . '" not found!');
+        }
         $list = FindFileHelper::scanDir($directory);
         $controllers = [];
         foreach ($list as $moduleName) {
