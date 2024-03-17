@@ -4,7 +4,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Untek\Component\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
 
 return static function (ContainerConfigurator $configurator): void {
-    $services = $configurator->services();
+    $services = $configurator->services()->defaults()->public();
     $parameters = $configurator->parameters();
 
     $services->set(TabContentWidget::class, TabContentWidget::class);
