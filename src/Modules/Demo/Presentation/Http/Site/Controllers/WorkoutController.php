@@ -7,17 +7,52 @@ use Symfony\Component\HttpFoundation\Response;
 use Untek\Core\Text\Helpers\TextHelper;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
 
+// http://taxi.fk/sandbox/demo/workout
+
 class WorkoutController extends AbstractSandboxController
 {
 
     public function __invoke(Request $request): Response
     {
-        $weight = [
+        $twoDumbbellWeight = [
+            5,
             2.5,
             2.5,
             1.25,
             0.5,
         ];
+        $twoDumbbellData = $this->generateTable($twoDumbbellWeight, 1.5, 5);
+        $twoDumbbellHtml = $this->renderTable($twoDumbbellData);
+
+        $oneDumbbellWeight = [
+            5,
+            5,
+            2.5,
+            2.5,
+            2.5,
+            2.5,
+            1.25,
+            1.25,
+            0.5,
+        ];
+        $oneDumbbellData = $this->generateTable($oneDumbbellWeight, 1.5, 5, 15);
+        $oneDumbbellHtml = $this->renderTable($oneDumbbellData);
+
+        $barbellWeight = [
+            5,
+            5,
+            2.5,
+            2.5,
+            2.5,
+            2.5,
+            1.25,
+            1.25,
+            0.5,
+            0.5,
+        ];
+        $barbellData = $this->generateTable($barbellWeight, 5, 8);
+        $barbellHtml = $this->renderTable($barbellData);
+
         $custom = [
             /*[
                 2.5,
@@ -50,31 +85,20 @@ class WorkoutController extends AbstractSandboxController
                 2.5,
             ],*/
         ];
-        $maxItems = 4;
-        $arr = $this->generateTable($weight, 1.5, $custom, $maxItems);
-        $forTwo = $this->renderTable($arr);
-
-        $weight = [
-            2.5,
-            2.5,
-            2.5,
-            2.5,
-            1.25,
-            1.25,
-            0.5,
-        ];
-        $maxItems = 5;
-        $arrOne = $this->generateTable($weight, 1.5, $custom, $maxItems, 15);
-        $forOne = $this->renderTable($arrOne);
-
-
 
         return $this->renderDefault([
-            'content' => "<h2>Two</h2>$forTwo<h2>One</h2>$forOne", // $this->renderTable($arr),
+            'content' => "
+<h2>Две гантели</h2>
+$twoDumbbellHtml
+<h2>Одна гантель</h2>
+$oneDumbbellHtml
+<h2>Штанга</h2>
+$barbellHtml
+",
         ]);
     }
 
-    private function generateTable(array $weight, float $barWeight, array $custom, int $maxItems, float $from = 0): array
+    private function generateTable(array $weight, float $barWeight, int $maxItems): array
     {
         $arr = [];
         $countWeight = count($weight);
@@ -95,19 +119,34 @@ class WorkoutController extends AbstractSandboxController
                     $itemsCount++;
                 }
             }
-            $sum = $this->sum($item, $barWeight);
-            if($itemsCount <= $maxItems && $sum > $from) {
-                $arr[$sum] = $item;
+//            $sum = $this->sum($item, $barWeight);
+            if($itemsCount <= $maxItems) {
+//                $item[] = $sum;
+                $arr[] = $item;
             }
         }
 
-        foreach ($custom as $item) {
+        /*foreach ($custom as $item) {
             $sum = $this->sum($item, $barWeight);
-            $arr[$sum] = $item;
-        }
+            $item[] = $sum;
+            $arr[] = $item;
+        }*/
 
+        $arr = $this->calcSumForList($arr, $barWeight);
 
         return $arr;
+    }
+
+    private function calcSumForList(array $arr, float $barWeight): array {
+        $result = [];
+        foreach ($arr as &$item) {
+            $sum = $this->sum($item, $barWeight);
+            if(!isset($result[$sum])) {
+                $item[] = $sum;
+                $result[$sum] = $item;
+            }
+        }
+        return $result;
     }
 
     private function sum(array $item, float $barWeight): string
@@ -129,7 +168,7 @@ class WorkoutController extends AbstractSandboxController
                 }
                 $table .= '<td>' . $val . '</td>';
             }
-            $table .= '<th>' . $sum . '</th>';
+//            $table .= '<th>' . $sum . '</th>';
             $table .= '</tr>';
         }
         $table .= '</table>';
