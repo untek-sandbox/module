@@ -19,6 +19,7 @@ class MainPageController extends AbstractSandboxController
     {
         $namespaces = explode(',', getenv('SANDBOX_NAMESPACES'));
         $modules = (new ControllerFinder())->findAll($namespaces, false);
+//        dd($modules);
         return $this->render(__DIR__ . '/../../../../resources/templates/main-page.php', [
             'modules' => $modules,
         ]);

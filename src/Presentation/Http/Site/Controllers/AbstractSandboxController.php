@@ -19,6 +19,8 @@ use Untek\Core\FileSystem\Helpers\MimeTypeHelper;
 use Untek\Core\Instance\Helpers\PropertyHelper;
 use Untek\Lib\Web\View\Libs\View;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
+use Untek\Component\Web\TwBootstrap\Widgets\Breadcrumb\BreadcrumbWidget;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 abstract class AbstractSandboxController extends AbstractController
 {
@@ -31,14 +33,21 @@ abstract class AbstractSandboxController extends AbstractController
     protected FormManager $formManager;
     protected SessionInterface $session;
     protected HtmlRenderInterface $htmlRender;
+    protected ?BreadcrumbWidget $breadcrumbWidget = null;
 
     public function __construct()
     {
+        $this->breadcrumbWidget = ContainerHelper::getContainer()->get(BreadcrumbWidget::class);
         $this->formManager = ContainerHelper::getContainer()->get(FormManager::class);
         $this->htmlRender = ContainerHelper::getContainer()->get(HtmlRenderInterface::class);
         $session = ContainerHelper::getContainer()->get(SessionInterface::class);
         $session->start();
         $this->session = $session;
+    }
+
+    protected function addBreadcrumb(string $title, ?string $link = null): void
+    {
+        $this->breadcrumbWidget->add($title, $link);
     }
 
     protected function redirectToHome(int $status = 302): RedirectResponse
@@ -266,6 +275,9 @@ abstract class AbstractSandboxController extends AbstractController
         if ($title && isset($this->htmlRender)) {
             $this->htmlRender->setParam('title', $title);
         }
+
+        $this->addBreadcrumb('Sandbox', '/sandbox');
+        $this->addBreadcrumb($title);
 
         $params['dumps'] = $this->dumps;
         $params['content'] = $content . ($params['content'] ?? '');
