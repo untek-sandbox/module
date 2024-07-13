@@ -9,7 +9,7 @@
  */
 
 use Untek\Component\Web\Form\Libs\FormRender;
-use Untek\Lib\Web\View\Libs\View;
+use Untek\Component\Web\View\Libs\View;
 
 ?>
 

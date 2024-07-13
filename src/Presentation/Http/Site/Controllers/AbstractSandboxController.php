@@ -17,7 +17,7 @@ use Untek\Core\Arr\Helpers\ArrayHelper;
 use Untek\Core\Container\Helpers\ContainerHelper;
 use Untek\Core\FileSystem\Helpers\MimeTypeHelper;
 use Untek\Core\Instance\Helpers\PropertyHelper;
-use Untek\Lib\Web\View\Libs\View;
+use Untek\Component\Web\View\Libs\View;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
 use Untek\Component\Web\TwBootstrap\Widgets\Breadcrumb\BreadcrumbWidget;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
