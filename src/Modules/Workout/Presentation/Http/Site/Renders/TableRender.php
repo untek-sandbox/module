@@ -12,7 +12,7 @@ class TableRender
 //        return $this->renderPart($arr);
 
 
-        $chunks = (new Collection($arr))->chunk(40);
+        $chunks = (new Collection($arr))->chunk(30);
 
         $table = '';
         $table .= '<table>';

@@ -1,7 +1,7 @@
 <?php
 
 namespace Untek\Sandbox\Module\Modules\Workout\Infrastructure\Service;
-// vendor/untek-sandbox/module/src/Modules/Workout/Infrastructure/Service/WorkoutService.php
+
 use Untek\Core\Arr\Helpers\ArrayHelper;
 use Untek\Core\Text\Helpers\TextHelper;
 use Untek\Sandbox\Module\Modules\Workout\Domain\Model\Puncake;
@@ -27,60 +27,61 @@ class WorkoutService
             foreach ($bits as $index => $bit) {
                 $bits[$index] = intval($bit);
             }
-            $item = [];
+            $puncackes = [];
             $itemsCount = 0;
             $totalWidth = 0;
             foreach ($weight as $index => $puncake) {
                 $weightItem = $puncake->getWeight();
                 $val = $bits[$index] * $weightItem;
-                $item[] = $val;
-                if($val) {
+                $puncackes[] = $val;
+                if ($val) {
                     $itemsCount++;
                     $totalWidth = $totalWidth + $puncake->getWidth();
                 }
             }
-//            $sum = $this->sum($item, $barWeight);
-            if($totalWidth <= $neckWidth) {
-//                $item[] = $sum;
+            if ($totalWidth <= $neckWidth) {
                 $arr[] = [
-                    'puncackes' => $item,
+                    'puncackes' => $puncackes,
+                    'sum' => $this->sum($puncackes, $barWeight),
+                    'hash' => $this->hash($puncackes),
                 ];
             }
         }
 
-        /*foreach ($custom as $item) {
-            $sum = $this->sum($item, $barWeight);
-            $item[] = $sum;
-            $arr[] = $item;
-        }*/
-
-        $arr = $this->calcSumForList($arr, $barWeight);
-
+        $arr = $this->filterByHash($arr);
+        $arr = $this->filterBySum($arr);
         ArrayHelper::multisort($arr, 'sum');
 
         return $arr;
     }
 
-    private function calcSumForList(array $arr, float $barWeight): array {
+    private function filterBySum(array $arr): array
+    {
+        $arr = array_reverse($arr);
         $result = [];
-        foreach ($arr as &$item) {
-            $sum = $this->sum($item['puncackes'], $barWeight);
-            $hash = $this->hash($item['puncackes']);
-            $item['sum'] = $sum;
+        foreach ($arr as $item) {
+            $hash = $item['sum'];
             $result[$hash] = $item;
-            /*if(!isset($result[$sum])) {
-                $item[] = $sum;
-                $result[$sum] = $item;
-            }*/
+        }
+        return array_reverse($result);
+    }
+
+    private function filterByHash(array $arr): array
+    {
+        $result = [];
+        foreach ($arr as $item) {
+            $hash = $item['hash'];
+            $result[$hash] = $item;
         }
         return $result;
     }
 
-    private function hash(array $item): string {
+    private function hash(array $item): string
+    {
         $hash = [];
         foreach ($item as $field => $value) {
-            if($field !== 'sum') {
-                if(!empty($value)) {
+            if ($field !== 'sum') {
+                if (!empty($value)) {
                     $hash[] = $value;
                 }
             }

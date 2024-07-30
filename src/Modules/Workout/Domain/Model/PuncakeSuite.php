@@ -8,8 +8,9 @@ class PuncakeSuite
     private array $puncakeWidth;
     private array $puncakeSuite;
 
-    public function add(string $weight, float $width, int $count): void
+    public function add(float $weight, float $width, int $count): void
     {
+        $weight = strval($weight);
         $this->puncakeWidth[$weight] = $width;
         $this->puncakeSuite[$weight] = $count;
     }
