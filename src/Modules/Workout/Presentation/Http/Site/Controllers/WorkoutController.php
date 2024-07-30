@@ -24,7 +24,7 @@ class WorkoutController extends AbstractSandboxController
 
         $twoDumbbellWeight2 = [];
         foreach ($twoDumbbellWeight as $weight) {
-            $twoDumbbellWeight2[] = new Puncake($weight, $puncakeWidth[$weight]);
+            $twoDumbbellWeight2[] = new Puncake($weight, $puncakeWidth["$weight"]);
         }
         return $twoDumbbellWeight2;
     }
@@ -53,10 +53,10 @@ class WorkoutController extends AbstractSandboxController
         $neckWidthBarbell = 17.4;
 
         $puncakeWidth = [
-            5 => 2.825,
-            2.5 => 2.375,
-            1.25 => 1.9125,
-            0.5 => 1.4625,
+            '5' => 2.825,
+            '2.5' => 2.375,
+            '1.25' => 1.9125,
+            '0.5' => 1.4625,
         ];
 
         $puncakeCount = [
