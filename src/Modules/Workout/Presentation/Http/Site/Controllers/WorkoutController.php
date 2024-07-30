@@ -29,10 +29,23 @@ class WorkoutController extends AbstractSandboxController
         return $twoDumbbellWeight2;
     }
 
+    private function generatePuncakes(array $puncakeCount, int $rate) {
+        $puncakes = [];
+        foreach ($puncakeCount as $weight => $count) {
+            $itemCount = $count / $rate;
+            for($i=0; $i<$itemCount; $i++) {
+                $puncakes[] = floatval($weight);
+            }
+        }
+        return $puncakes;
+    }
+
     public function __invoke(Request $request): Response
     {
         $workoutService = new WorkoutService();
         $tableRender = new TableRender();
+
+        $tables = [];
 
         // ширина грифа гантели под блины - 12см
         $neckWidthDumbbell = 12;
@@ -46,92 +59,54 @@ class WorkoutController extends AbstractSandboxController
             0.5 => 1.4625,
         ];
 
-        $twoDumbbellWeight = $this->createPuncakes([
-            5,
-            5,
-            2.5,
-            2.5,
-            1.25,
-            0.5,
-        ], $puncakeWidth);
-
-        $twoDumbbellData = $workoutService->generateTable($twoDumbbellWeight, 1.5, $neckWidthDumbbell);
-        $twoDumbbellHtml = $tableRender->renderTable($twoDumbbellData);
-
-        $oneDumbbellWeight = $this->createPuncakes([
-            5,
-            5,
-            5,
-            5,
-            2.5,
-            2.5,
-            2.5,
-            2.5,
-            1.25,
-            1.25,
-            0.5,
-        ], $puncakeWidth);
-        $oneDumbbellData = $workoutService->generateTable($oneDumbbellWeight, 1.5, $neckWidthDumbbell);
-        $oneDumbbellHtml = $tableRender->renderTable($oneDumbbellData);
-
-        $barbellWeight = $this->createPuncakes([
-            5,
-            5,
-            5,
-            5,
-            2.5,
-            2.5,
-            2.5,
-            2.5,
-            1.25,
-            1.25,
-            0.5,
-            0.5,
-        ], $puncakeWidth);
-        $barbellData = $workoutService->generateTable($barbellWeight, 5, $neckWidthBarbell);
-        $barbellHtml = $tableRender->renderTable($barbellData);
-
-        $custom = [
-            /*[
-                2.5,
-                2.5,
-                2.5,
-                0,
-            ],
-            [
-                2.5,
-                2.5,
-                2.5,
-                0.5,
-            ],
-            [
-                2.5,
-                2.5,
-                1.25,
-                1.25,
-            ],
-            [
-                2.5,
-                2.5,
-                2.5,
-                1.25,
-            ],
-            [
-                2.5,
-                2.5,
-                2.5,
-                2.5,
-            ],*/
+        $puncakeCount = [
+            '5' => 8,
+            '2.5' => 8,
+            '1.25' => 4,
+            '0.5' => 4,
         ];
+
+        $puncakes = $this->generatePuncakes($puncakeCount, 4);
+        $twoDumbbellWeight = $this->createPuncakes($puncakes, $puncakeWidth);
+        $twoDumbbellData = $workoutService->generateTable($twoDumbbellWeight, 1.5, $neckWidthDumbbell);
+        $tableData['title'] = 'Две гантели';
+        $tableData['table'] = $tableRender->renderTable($twoDumbbellData);
+        $tables[] = $tableData;
+
+        $puncakes = $this->generatePuncakes($puncakeCount, 2);
+        $oneDumbbellWeight = $this->createPuncakes($puncakes, $puncakeWidth);
+        $oneDumbbellData = $workoutService->generateTable($oneDumbbellWeight, 1.5, $neckWidthDumbbell);
+        $tableData['title'] = 'Одна гантель';
+        $tableData['table'] = $tableRender->renderTable($oneDumbbellData);
+        $tables[] = $tableData;
+
+        $puncakes = $this->generatePuncakes($puncakeCount, 2);
+        $barbellWeight = $this->createPuncakes($puncakes, $puncakeWidth);
+        $barbellData = $workoutService->generateTable($barbellWeight, 5, $neckWidthBarbell);
+        $tableData['title'] = 'Штанга';
+        $tableData['table'] = $tableRender->renderTable($barbellData);
+        $tables[] = $tableData;
+
+        $html = '';
+        foreach ($tables as $table) {
+            $this->toTab($table['title']);
+            $this->print($table['table']);
+//            $html .= "<h2>{$table['title']}</h2>{$table['table']}";
+        }
 
         return $this->renderDefault([
             'content' => "
-<h2>Две гантели</h2>
-$twoDumbbellHtml
-<h2>Одна гантель</h2>
-$oneDumbbellHtml
-<h2>Штанга</h2>
-$barbellHtml
+<style>
+
+@media print {
+    .pagebreak { page-break-before: always; } /* page-break-after works, as well */
+}
+
+.page-break {
+  page-break-after: always;
+}
+</style>
+$html
 ",
         ]);
     }
