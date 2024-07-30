@@ -9,7 +9,7 @@ class TableRender
 
     public function renderTable(array $arr): string
     {
-        return $this->renderPart($arr);
+//        return $this->renderPart($arr);
 
 
         $chunks = (new Collection($arr))->chunk(40);
@@ -29,19 +29,24 @@ class TableRender
 
     private function renderPart($arr) {
         $table = '';
-        $table .= '<table class="table table-striped table-bordered table-sm mr-3" style="width: 100px; font-size: 10px;">';
+        $table .= '<table class="table table-striped table-bordered table-sm mr-3" style="width: 230px; font-size: 10px;">';
         foreach ($arr as $sum => $row) {
             $table .= '<tr>';
-            foreach ($row as $field => $val) {
+            $vals = [];
+            /*foreach ($row['puncackes'] as $field => $val) {
                 if (empty($val)) {
                     $val = '';
                 }
-                if ($field == 'sum') {
-                    $table .= '<th>' . $val . '</th>';
-                } else {
-                    $table .= '<td>' . $val . '</td>';
+                $table .= '<td>' . $val . '</td>';
+            }*/
+            foreach ($row['puncackes'] as $field => $val) {
+                if(!empty($val)) {
+                    $vals[] = $val;
                 }
             }
+            $table .= '<td>' . implode('&nbsp;|&nbsp;', $vals) . '</td>';
+
+            $table .= '<th>' . $row['sum'] . '</th>';
             $table .= '</tr>';
         }
         $table .= '</table>';

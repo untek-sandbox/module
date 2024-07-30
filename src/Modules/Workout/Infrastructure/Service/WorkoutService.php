@@ -42,7 +42,9 @@ class WorkoutService
 //            $sum = $this->sum($item, $barWeight);
             if($totalWidth <= $neckWidth) {
 //                $item[] = $sum;
-                $arr[] = $item;
+                $arr[] = [
+                    'puncackes' => $item,
+                ];
             }
         }
 
@@ -62,8 +64,8 @@ class WorkoutService
     private function calcSumForList(array $arr, float $barWeight): array {
         $result = [];
         foreach ($arr as &$item) {
-            $sum = $this->sum($item, $barWeight);
-            $hash = $this->hash($item);
+            $sum = $this->sum($item['puncackes'], $barWeight);
+            $hash = $this->hash($item['puncackes']);
             $item['sum'] = $sum;
             $result[$hash] = $item;
             /*if(!isset($result[$sum])) {

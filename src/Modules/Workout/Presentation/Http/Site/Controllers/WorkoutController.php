@@ -9,7 +9,6 @@ use Untek\Sandbox\Module\Modules\Workout\Application\Handlers\GenerateTableComma
 use Untek\Sandbox\Module\Modules\Workout\Domain\Model\Device;
 use Untek\Sandbox\Module\Modules\Workout\Domain\Model\DeviceType;
 use Untek\Sandbox\Module\Modules\Workout\Domain\Model\PuncakeSuite;
-use Untek\Sandbox\Module\Modules\Workout\Infrastructure\Service\WorkoutService;
 use Untek\Sandbox\Module\Modules\Workout\Presentation\Http\Site\Renders\TableRender;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
 
@@ -21,10 +20,7 @@ class WorkoutController extends AbstractSandboxController
     public function __invoke(Request $request): Response
     {
         $handler = new GenerateTableCommandHandler();
-        $workoutService = new WorkoutService();
         $tableRender = new TableRender();
-
-        $tables = [];
 
         $suite = new PuncakeSuite();
         $suite->add('5', 2.825, 8);
@@ -50,6 +46,7 @@ class WorkoutController extends AbstractSandboxController
             ],
         ];
 
+        $tables = [];
         foreach ($commands as $item) {
             /** @var GenerateTableCommand $command */
             $command = $item['command'];

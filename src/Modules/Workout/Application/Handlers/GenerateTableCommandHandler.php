@@ -15,6 +15,34 @@ class GenerateTableCommandHandler
         $puncakes = $this->generatePuncakes($command->getSuite()->getPuncakeSuite(), $command->getPuncakeCount());
         $puncakeCollection = $this->createPuncakes($puncakes, $command->getSuite()->getPuncakeWidth());
         $dataForTable = $workoutService->generateTable($puncakeCollection, $command->getDevice()->getBarWeight(), $command->getDevice()->getNeckWidth());
+
+        /*foreach ($dataForTable as &$item) {
+            foreach ($item['puncackes'] as $field => $value) {
+                if(empty($value)) {
+                    unset($item['puncackes'][$field]);
+                }
+            }
+        }*/
+
+        $maxCount = 0;
+//        foreach ($dataForTable as $item) {
+//            if(count($item['puncackes']) > $maxCount) {
+//                $maxCount = count($item['puncackes']);
+//            }
+//        }
+
+        /*foreach ($dataForTable as &$item) {
+            if(count($item['puncackes']) < $maxCount) {
+                $need = $maxCount - count($item['puncackes']);
+                for ($i=0; $i<$need; $i++) {
+                    $item['puncackes'][] = 0;
+                }
+            }
+        }*/
+
+//        dd($dataForTable);
+//        dd($maxCount);
+
         return $dataForTable;
     }
 
