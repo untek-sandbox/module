@@ -3,7 +3,7 @@
 namespace Untek\Sandbox\Module\Application\Services;
 
 use ReflectionClass;
-use Untek\Core\Arr\Helpers\ArrayHelper;
+use Untek\Component\Arr\Helpers\ArrayHelper;
 use Untek\Component\Code\Helpers\ComposerHelper;
 use Untek\Core\FileSystem\Helpers\FilePathHelper;
 use Untek\Core\FileSystem\Helpers\FindFileHelper;

@@ -13,7 +13,7 @@ use Untek\Component\Http\Enums\HttpStatusCodeEnum;
 use Untek\Component\Web\Form\Libs\FormManager;
 use Untek\Component\Web\HtmlRender\Application\Services\HtmlRenderInterface;
 use Untek\Component\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
-use Untek\Core\Arr\Helpers\ArrayHelper;
+use Untek\Component\Arr\Helpers\ArrayHelper;
 use Untek\Core\Container\Helpers\ContainerHelper;
 use Untek\Core\FileSystem\Helpers\MimeTypeHelper;
 use Untek\Core\Instance\Helpers\PropertyHelper;
