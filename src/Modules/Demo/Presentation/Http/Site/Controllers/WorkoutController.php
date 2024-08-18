@@ -4,7 +4,7 @@ namespace Untek\Sandbox\Module\Modules\Demo\Presentation\Http\Site\Controllers;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Untek\Core\Text\Helpers\TextHelper;
+use Untek\Component\Text\Helpers\TextHelper;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
 
 // http://taxi.fk/sandbox/demo/workout

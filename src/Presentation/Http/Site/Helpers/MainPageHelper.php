@@ -2,8 +2,8 @@
 
 namespace Untek\Sandbox\Module\Presentation\Http\Site\Helpers;
 
-use Untek\Core\FileSystem\Helpers\FilePathHelper;
-use Untek\Core\Text\Helpers\Inflector;
+use Untek\Component\FileSystem\Helpers\FilePathHelper;
+use Untek\Component\Text\Helpers\Inflector;
 
 class MainPageHelper
 {
