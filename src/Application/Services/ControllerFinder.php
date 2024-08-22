@@ -7,7 +7,7 @@ use Untek\Component\Arr\Helpers\ArrayHelper;
 use Untek\Component\Code\Helpers\ComposerHelper;
 use Untek\Component\FileSystem\Helpers\FilePathHelper;
 use Untek\Component\FileSystem\Helpers\FindFileHelper;
-use Untek\Component\Text\Helpers\Inflector;
+use Yiisoft\Strings\Inflector;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxMenuController;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
@@ -68,7 +68,7 @@ class ControllerFinder
                     'pureName' => $controllerPureName,
                     'fileName' => $controllerFileName,
                     'name' => $controllerName,
-                    'uri' => '/sandbox/' . Inflector::camel2id($moduleName) . '/' . Inflector::camel2id($controllerPureName),
+                    'uri' => '/sandbox/' . (new Inflector())->pascalCaseToId($moduleName) . '/' . (new Inflector())->pascalCaseToId($controllerPureName),
                     'className' => $controllerClassName,
                 ];
                 $rr = new ReflectionClass($controller['className']);

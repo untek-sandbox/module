@@ -3,7 +3,7 @@
 namespace Untek\Sandbox\Module\Presentation\Http\Site\Helpers;
 
 use Untek\Component\FileSystem\Helpers\FilePathHelper;
-use Untek\Component\Text\Helpers\Inflector;
+use Yiisoft\Strings\Inflector;
 
 class MainPageHelper
 {
@@ -13,6 +13,6 @@ class MainPageHelper
         $controllerName = FilePathHelper::fileNameOnly($className);
         $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
         $controllerPureName = substr($controllerName, 0, 0 - strlen('Controller'));
-        return Inflector::titleize($controllerPureName);
+        return (new Inflector())->toSentence($controllerPureName);
     }
 }
