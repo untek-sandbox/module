@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mime\MimeTypes;
 use Untek\Component\Web\Widget\Widgets\Toastr\Application\Services\ToastrServiceInterface;
 use Untek\Component\Encoder\Encoders\XmlEncoder;
 use Untek\Component\Http\Enums\HttpStatusCodeEnum;
@@ -15,7 +16,6 @@ use Untek\Component\Web\HtmlRender\Application\Services\HtmlRenderInterface;
 use Untek\Component\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
 use Untek\Component\Arr\Helpers\ArrayHelper;
 use Untek\Core\Container\Helpers\ContainerHelper;
-use Untek\Component\FileSystem\Helpers\MimeTypeHelper;
 use Untek\Core\Instance\Helpers\PropertyHelper;
 use Untek\Component\Web\View\Libs\View;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
@@ -296,14 +296,14 @@ abstract class AbstractSandboxController extends AbstractController
 
     protected function openFile(string $fileName, string $mime = null): Response
     {
-        $mime = $mime ?: MimeTypeHelper::getMimeTypeByFileName($fileName);
+        $mime = $mime ?: (new MimeTypes())->guessMimeType($fileName);
         $response = new BinaryFileResponse($fileName, 200, ['Content-Type' => $mime]);
         return $response;
     }
 
     protected function downloadFile(string $fileName): Response
     {
-        $mime = MimeTypeHelper::getMimeTypeByFileName($fileName);
+        $mime = (new MimeTypes())->guessMimeType($fileName);
         $response = new BinaryFileResponse($fileName);
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', basename($fileName)));
 //        $response->setContent(file_get_contents($fileName));
