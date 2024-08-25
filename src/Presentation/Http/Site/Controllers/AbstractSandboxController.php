@@ -21,6 +21,7 @@ use Untek\Component\Web\View\Libs\View;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
 use Untek\Component\Web\TwBootstrap\Widgets\Breadcrumb\BreadcrumbWidget;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Yiisoft\Arrays\ArrayHelper;
 
 abstract class AbstractSandboxController extends AbstractController
 {
@@ -107,7 +108,7 @@ abstract class AbstractSandboxController extends AbstractController
 
     protected function printTable(array $value, array $headers = [])
     {
-        if (!ExtArrayHelper::isIndexed($value)) {
+        if (!ArrayHelper::isIndexed($value)) {
             $rr = [];
             foreach ($value as $name => $value) {
                 $rr[] = [$name, $value];

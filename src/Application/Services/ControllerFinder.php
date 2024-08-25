@@ -7,6 +7,7 @@ use Untek\Component\Arr\Helpers\ExtArrayHelper;
 use Untek\Component\Code\Helpers\ComposerHelper;
 use Untek\Component\FileSystem\Helpers\FilePathHelper;
 use Untek\Component\FileSystem\Helpers\FindFileHelper;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Strings\Inflector;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxMenuController;
@@ -20,7 +21,7 @@ class ControllerFinder
         $modules = [];
         foreach ($namespaces as $namespace) {
             $foundModules = $this->find($namespace, $showHidden);
-            $modules = ExtArrayHelper::merge($modules, $foundModules);
+            $modules = ArrayHelper::merge($modules, $foundModules);
         }
         return $modules;
     }
