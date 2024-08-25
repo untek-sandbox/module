@@ -14,7 +14,7 @@ use Untek\Component\Http\Enums\HttpStatusCodeEnum;
 use Untek\Component\Web\Form\Libs\FormManager;
 use Untek\Component\Web\HtmlRender\Application\Services\HtmlRenderInterface;
 use Untek\Component\Web\TwBootstrap\Widgets\TabContent\TabContentWidget;
-use Untek\Component\Arr\Helpers\ArrayHelper;
+use Untek\Component\Arr\Helpers\ExtArrayHelper;
 use Untek\Core\Container\Helpers\ContainerHelper;
 use Untek\Core\Instance\Helpers\PropertyHelper;
 use Untek\Component\Web\View\Libs\View;
@@ -107,7 +107,7 @@ abstract class AbstractSandboxController extends AbstractController
 
     protected function printTable(array $value, array $headers = [])
     {
-        if (!ArrayHelper::isIndexed($value)) {
+        if (!ExtArrayHelper::isIndexed($value)) {
             $rr = [];
             foreach ($value as $name => $value) {
                 $rr[] = [$name, $value];

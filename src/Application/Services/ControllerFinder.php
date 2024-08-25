@@ -3,7 +3,7 @@
 namespace Untek\Sandbox\Module\Application\Services;
 
 use ReflectionClass;
-use Untek\Component\Arr\Helpers\ArrayHelper;
+use Untek\Component\Arr\Helpers\ExtArrayHelper;
 use Untek\Component\Code\Helpers\ComposerHelper;
 use Untek\Component\FileSystem\Helpers\FilePathHelper;
 use Untek\Component\FileSystem\Helpers\FindFileHelper;
@@ -20,7 +20,7 @@ class ControllerFinder
         $modules = [];
         foreach ($namespaces as $namespace) {
             $foundModules = $this->find($namespace, $showHidden);
-            $modules = ArrayHelper::merge($modules, $foundModules);
+            $modules = ExtArrayHelper::merge($modules, $foundModules);
         }
         return $modules;
     }
