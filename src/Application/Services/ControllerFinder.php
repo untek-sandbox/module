@@ -3,15 +3,14 @@
 namespace Untek\Sandbox\Module\Application\Services;
 
 use ReflectionClass;
-use Untek\Component\Arr\Helpers\ExtArrayHelper;
 use Untek\Component\Code\Helpers\ComposerHelper;
 use Untek\Component\FileSystem\Helpers\FilePathHelper;
 use Untek\Component\FileSystem\Helpers\FindFileHelper;
-use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Strings\Inflector;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxMenuController;
 use Untek\Sandbox\Module\Presentation\Http\Site\Helpers\MainPageHelper;
+use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Strings\Inflector;
 
 class ControllerFinder
 {
