@@ -3,7 +3,7 @@
 namespace Untek\Sandbox\Module\Application\Services;
 
 use ReflectionClass;
-use Untek\Component\Code\Helpers\ComposerHelper;
+use Untek\Component\Package\Helpers\ComposerHelper;
 use Untek\Component\FileSystem\Helpers\FilePathHelper;
 use Untek\Component\FileSystem\Helpers\FindFileHelper;
 use Untek\Sandbox\Module\Presentation\Http\Site\Controllers\AbstractSandboxController;
