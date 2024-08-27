@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Mime\MimeTypes;
 use Untek\Component\Encoder\Encoders\XmlEncoder;
-use Untek\Component\Http\Enums\HttpStatusCodeEnum;
 use Untek\Component\Web\Form\Libs\FormManager;
 use Untek\Component\Web\HtmlRender\Application\Services\HtmlRenderInterface;
 use Untek\Component\Web\TwBootstrap\Widgets\Breadcrumb\BreadcrumbWidget;
@@ -60,7 +59,7 @@ abstract class AbstractSandboxController extends AbstractController
         return new RedirectResponse($referer);
     }
 
-    protected function redirect(string $url, int $status = HttpStatusCodeEnum::MOVED_TEMPORARILY): RedirectResponse
+    protected function redirect(string $url, int $status = Response::HTTP_FOUND): RedirectResponse
     {
         return new RedirectResponse($url, $status);
     }
